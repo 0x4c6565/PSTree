@@ -27,7 +27,7 @@ function Get-Tree($Directory, $Depth = 0)
             $ItemChar = '├'
         }
         
-        $Output += Get-TreeOutput -Item $Item -Depth $Depth -ItemChar $ItemChar
+        $Output += Get-TreeOutput -Item $Item.Name -Depth $Depth -ItemChar $ItemChar
 
         if ($Item.PSIsContainer)
         {
@@ -40,5 +40,5 @@ function Get-Tree($Directory, $Depth = 0)
 
 function Get-TreeOutput($Item, [int]$Depth, $ItemChar = '├')
 {
-    return ("{0}   {1}── {2}" -f ("   │" * $Depth), $ItemChar, $Item.Name)
+    return ("{0}   {1}── {2}" -f ("   │" * $Depth), $ItemChar, $Item)
 }
