@@ -1,4 +1,3 @@
-
 function Get-Tree($Directory, $Depth = 0)
 {
     $Output = @()
@@ -18,8 +17,8 @@ function Get-Tree($Directory, $Depth = 0)
     foreach ($Item in $Items)
     {
         $FileCount++
-            
-        if ($Items.Count -gt 0 -and $FileCount -eq $Items.Count)
+        
+        if ($FileCount -eq $Items.Count)
         {
             $ItemChar = '└'
         }
