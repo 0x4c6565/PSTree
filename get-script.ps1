@@ -11,8 +11,6 @@ function Get-Tree($Directory, $Depth = 0)
         $Items = Get-ChildItem -ErrorAction SilentlyContinue
     }
 
-
-
     $FileCount=0
     foreach ($Item in $Items)
     {
