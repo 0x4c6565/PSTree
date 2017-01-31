@@ -1,4 +1,4 @@
-function Get-Tree($Directory, $Depth = 0)
+function Get-Tree($Directory, $DepthChar = '')
 {
     $Output = @()
 
@@ -19,24 +19,26 @@ function Get-Tree($Directory, $Depth = 0)
         if ($FileCount -eq $Items.Count)
         {
             $ItemChar = '└'
+            $NewDepthChar = '     '
         }
         else
         {
             $ItemChar = '├'
+            $NewDepthChar =  '    │'
         }
         
-        $Output += Get-TreeOutput -Item $Item.Name -Depth $Depth -ItemChar $ItemChar
+        $Output += Get-TreeOutput -Item $Item.Name -DepthChar $DepthChar -ItemChar $ItemChar
 
         if ($Item.PSIsContainer)
         {
-            $Output += Get-Tree -Directory $Item.FullName -Depth ($Depth + 1)
+            $Output += Get-Tree -Directory $Item.FullName -DepthChar ($DepthChar + $NewDepthChar)
         }
     }
 
     return $Output
 }
 
-function Get-TreeOutput($Item, [int]$Depth, $ItemChar = '├')
+function Get-TreeOutput($Item, $DepthChar, $ItemChar = '├')
 {
-    return ("{0}   {1}── {2}" -f ("   │" * $Depth), $ItemChar, $Item)
+    return ("{0}    {1}── {2}" -f $DepthChar, $ItemChar, $Item)
 }
