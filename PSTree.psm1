@@ -3,7 +3,7 @@ function Get-Tree
     [CmdletBinding()]
     Param
     (
-        [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)][string[]]$Path,
+        [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)][Alias("FullName")][string[]]$Path,
         $Depth=0,
         $DepthPrefix = ''
     )
@@ -42,7 +42,7 @@ function Get-Tree
                 else
                 {
                     $ItemChar = '├'
-                    $NewDepthPrefix =  '│  '
+                    $NewDepthPrefix =  '│   '
                 }
 
                 $Output += ("{0}{1}── {2}" -f $DepthPrefix, $ItemChar, $Item.Name)
