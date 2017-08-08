@@ -82,7 +82,7 @@ function Convert-BytesToHumanSize($Bytes)
         3 {return "{0:n2} GB" -f ($Bytes / 1gb)}
         4 {return "{0:n2} TB" -f ($Bytes / 1tb)}
         5 {return "{0:n2} PB" -f ($Bytes / 1pb)}
-        Default {return "$Bytes B"}
+        default {return "$Bytes B"}
     }
 }
 
