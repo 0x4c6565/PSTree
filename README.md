@@ -1,6 +1,8 @@
 # PSTree
 Simple Powershell module to generate a directory tree view
 
+Usage: ``Get-Tree [-Path <string[]>] [-Size]``
+
 ```
 PS  C:\My\Path> Get-Tree
 .
