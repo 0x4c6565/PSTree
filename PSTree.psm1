@@ -1,16 +1,23 @@
-function Get-TreeInternal
+﻿function Get-TreeInternal
 {
     [CmdletBinding()]
     Param
     (
         [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)][Alias("FullName")][string[]]$Path,
         [switch]$Size,
+        [switch]$Directory,
+        [int]$MaxDepth=0,
         $Depth=0,
         $DepthPrefix = ''
     )
 
     Process
     {
+        if ($MaxDepth -gt 0 -and ($Depth+1) -gt $MaxDepth)
+        {
+            return
+        }
+
         if ($Path -eq $null)
         {
             $Path = "."
@@ -26,8 +33,19 @@ function Get-TreeInternal
         $Items = Get-ChildItem -Path $Path -ErrorAction SilentlyContinue
 
         $FileCount=0
+        $TotalCountCount = $Items.Count
+        if ($Directory)
+        {
+            $TotalCountCount = ($Items | Where-Object -FilterScript {$_.PSIsContainer}).Count
+        }
+        
         foreach ($Item in $Items)
         {
+            if ($Directory -and !$Item.PSIsContainer)
+            {
+                continue
+            }
+
             $FileCount++
 
             $ItemTreeBranch = '├── '
@@ -35,7 +53,7 @@ function Get-TreeInternal
             
             $ItemTreeName = $DepthPrefix
 
-            if ($FileCount -eq $Items.Count)
+            if ($FileCount -eq $TotalCountCount)
             {
                 $ItemTreeBranch = '└── '
                 $NewDepthPrefix = '    '
@@ -53,7 +71,7 @@ function Get-TreeInternal
             $Output += $ItemTreeName
             if ($Item.PSIsContainer)
             {
-                $Output += $Item | Get-TreeInternal -Size:$Size -Depth ($Depth+1) -DepthPrefix ($DepthPrefix + $NewDepthPrefix)
+                $Output += $Item | Get-TreeInternal -Size:$Size -Directory:$Directory -MaxDepth $MaxDepth -Depth ($Depth+1) -DepthPrefix ($DepthPrefix + $NewDepthPrefix)
             }
         }
 
@@ -67,10 +85,12 @@ function Get-Tree
     Param
     (
         [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)][Alias("FullName")][string[]]$Path,
-        [switch]$Size
+        [switch]$Size,
+        [switch]$Directory,
+        [int]$MaxDepth=0
     )
 
-    return $Path | Get-TreeInternal -Size:$Size
+    return $Path | Get-TreeInternal -Size:$Size -Directory:$Directory -MaxDepth $MaxDepth
 }
 
 function Convert-BytesToHumanSize($Bytes)
